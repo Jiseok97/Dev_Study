@@ -23,7 +23,7 @@
 * Delegate
     * 사용자의 입력 터치 등 이벤트 발생 시 Controller가 그 이벤트를 처리하기 때문에 View가 직접적으로 Controller에 접근할 필요가 없게 된다.
 * Model → 값 변화
-    * **Notification** || **KVO(Key-Value Observing)** 를 사용하여 Controller가 감지하여 처리할 수 있도록 해준다.
+    * **Notification** || **KVO(Key-Value Observing)** || **Delegation** || **Functional Reactive Programming** || **Property Observer** 등을 사용하여 Controller가 감지하여 처리할 수 있도록 해준다.
 </br>
 
 ## ‣ What is the KVO ??

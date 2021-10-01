@@ -5,15 +5,23 @@
 
 <img width="800" alt="MVVM 패턴" src="https://user-images.githubusercontent.com/64394744/135607402-01158195-b748-4604-8587-cfca71f3a772.png">
 
+## ‣ MVVM 패턴 흐름
+
+1. 사용자가 화면에서 Action을 취하면 Command Pattern으로 **View → View Model**로 전달된다.
+2. **View Model**이 **Model**에게 Data를 요청한다.
+3. **Model**은 요청받은 Data를 통해 **Update된 Data**를 **View Model**로 전달한다.
+4. **View Model**은 응답받은 데이터를 가공해서 저장합니다.
+5. **View**는 **View Model**과의 **Data Binding**을 통해서 자동으로 갱신된다.
+</br>
 
 ## ‣ About MVVM ❔
+* ⭐️ 핵심 → 데이터 바인딩(Data Binding)
+    * 데이터를 제공하는 자 & 해당 데이터를 사용하는 자를 연결시켜 **동기화**되도록 하는 방식
+    * 쉽게 말해 **View**와 **로직**이 분리되어 있어도 한 쪽이 바뀌면 다른쪽도 업데이트가 이러우지는 것을 말한다.
+    
 * Why use ?
     * 기존 MVC패턴은 다양한 로직을 Controller에서 처리하다보니 Controller가 비대해지는 문제점이 있다.
-    
-- **View**에 업데이트할 데이터를 **View Model**에서 처리함으로써 Controller가 복잡해지는 것을 줄여준다.
-- **View**에 어떤 **View Model**을 연결하느냐에 따라 로직처리가 달라진다.
-- **Model**이 변경되면 관련된 **View Model**을 사용하는 **View**가 자동으로 업데이트 되는 방식이다.
-    
+
 * MVVM → **Model** + **View** + **View Model**
     * **Model**
         * 데이터 캡슐화
@@ -166,4 +174,11 @@ extension DogViewModel {
     * 바인딩을 도와주는 라이브러리를 함께 사용하지 않으면, 많은 기반 코드를 작성해야 함
     * **View Model**을 설계하는 것이 쉽지 않다.
     * **View**에 대한 처리가 복잡해질수록 **View Model**이 거대해져 **오버스펙**이 될 수 있다.
+</br>
 
+## 🔗 Aditional 
+
+- **View**에 업데이트할 데이터를 **View Model**에서 처리함으로써 Controller가 복잡해지는 것을 줄여준다.
+- **View**에 어떤 **View Model**을 연결하느냐에 따라 로직처리가 달라진다.
+- **Model**이 변경되면 관련된 **View Model**을 사용하는 **View**가 자동으로 업데이트 되는 방식이다.
+- **SwiftUI**의 **View**는 **View Model**을 소유하고 있으며, 이 **View Model**은 **View**에 의해 Observed되고 있다.
