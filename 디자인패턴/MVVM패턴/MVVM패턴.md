@@ -12,6 +12,8 @@
 3. **Model**은 요청받은 Data를 통해 **Update된 Data**를 **View Model**로 전달한다.
 4. **View Model**은 응답받은 데이터를 가공해서 저장합니다.
 5. **View**는 **View Model**과의 **Data Binding**을 통해서 자동으로 갱신된다.
+> Command Patter → 실행될 기능을 추상화, 캡슐화하여 한 클래스에서 여러 기능을 실행할 수 있도록 하는 패턴이다. </br>
+> Data Binding → KVO, Delegation, Functional Reactive Programming, Property Observer 
 </br>
 
 ## ‣ About MVVM ❔
