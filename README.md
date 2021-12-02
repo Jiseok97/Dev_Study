@@ -1,5 +1,5 @@
 # Dev_Study
-8th CMC → 개발 스터디💻
+8th CMC → 개발 스터디💻 & 나만의 개발 이슈📬
 </br>
 </br>
 
