@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="19455" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="BYZ-38-t0r">
+    <device id="retina6_1" orientation="portrait" appearance="light"/>
+    <dependencies>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="19454"/>
+        <capability name="Safe area layout guides" minToolsVersion="9.0"/>
+        <capability name="System colors in document resources" minToolsVersion="11.0"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <scenes>
+        <!--View Controller-->
+        <scene sceneID="tne-QT-ifu">
+            <objects>
+                <viewController id="BYZ-38-t0r" customClass="ViewController" customModule="UTCTime" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="8bC-Xf-vdC">
+                        <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="FUk-xz-gYY">
+                                <rect key="frame" x="177.5" y="388.5" width="59.5" height="29"/>
+                                <fontDescription key="fontDescription" type="system" weight="semibold" pointSize="24"/>
+                                <nil key="textColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Rsf-b9-7LC">
+                                <rect key="frame" x="190" y="447.5" width="34" height="32"/>
+                                <fontDescription key="fontDescription" type="system" weight="semibold" pointSize="16"/>
+                                <inset key="imageEdgeInsets" minX="0.0" minY="0.0" maxX="2.2250738585072014e-308" maxY="0.0"/>
+                                <state key="normal" title="Now">
+                                    <color key="titleColor" systemColor="linkColor"/>
+                                </state>
+                                <connections>
+                                    <action selector="onNowTapped:" destination="BYZ-38-t0r" eventType="touchUpInside" id="WhI-a3-IPn"/>
+                                </connections>
+                            </button>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="sIN-VL-TQz">
+                                <rect key="frame" x="254" y="447.5" width="73" height="32"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="16"/>
+                                <inset key="imageEdgeInsets" minX="0.0" minY="0.0" maxX="2.2250738585072014e-308" maxY="0.0"/>
+                                <state key="normal" title="Tomorrow">
+                                    <color key="titleColor" red="0.10980392160000001" green="0.43137254899999999" blue="0.90588235289999997" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                </state>
+                                <connections>
+                                    <action selector="onTomorrowTapped:" destination="BYZ-38-t0r" eventType="touchUpInside" id="oMu-9r-On9"/>
+                                </connections>
+                            </button>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="XQC-dj-G5V">
+                                <rect key="frame" x="88" y="447.5" width="72" height="32"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="16"/>
+                                <inset key="imageEdgeInsets" minX="0.0" minY="0.0" maxX="2.2250738585072014e-308" maxY="0.0"/>
+                                <state key="normal" title="Yesterday">
+                                    <color key="titleColor" systemColor="linkColor"/>
+                                </state>
+                                <connections>
+                                    <action selector="onYesterdayTapped:" destination="BYZ-38-t0r" eventType="touchUpInside" id="WHx-C8-v0q"/>
+                                </connections>
+                            </button>
+                        </subviews>
+                        <viewLayoutGuide key="safeArea" id="6Tk-OE-BBY"/>
+                        <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                        <constraints>
+                            <constraint firstItem="sIN-VL-TQz" firstAttribute="centerY" secondItem="Rsf-b9-7LC" secondAttribute="centerY" id="0S2-mx-c5k"/>
+                            <constraint firstItem="Rsf-b9-7LC" firstAttribute="top" secondItem="FUk-xz-gYY" secondAttribute="bottom" constant="30" id="4UE-pk-Ama"/>
+                            <constraint firstItem="Rsf-b9-7LC" firstAttribute="leading" secondItem="XQC-dj-G5V" secondAttribute="trailing" constant="30" id="GXX-5J-row"/>
+                            <constraint firstItem="FUk-xz-gYY" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" id="Kn3-Yi-Aq2"/>
+                            <constraint firstItem="XQC-dj-G5V" firstAttribute="centerY" secondItem="Rsf-b9-7LC" secondAttribute="centerY" id="RMs-vC-wEI"/>
+                            <constraint firstItem="FUk-xz-gYY" firstAttribute="centerY" secondItem="8bC-Xf-vdC" secondAttribute="centerY" multiplier="0.9" id="i29-He-fmW"/>
+                            <constraint firstItem="sIN-VL-TQz" firstAttribute="leading" secondItem="Rsf-b9-7LC" secondAttribute="trailing" constant="30" id="ibm-Ii-xA8"/>
+                            <constraint firstItem="Rsf-b9-7LC" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" id="wYn-DP-SAD"/>
+                        </constraints>
+                    </view>
+                    <connections>
+                        <outlet property="dateTimeLbl" destination="FUk-xz-gYY" id="png-zB-mHg"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="45" y="71"/>
+        </scene>
+    </scenes>
+    <resources>
+        <systemColor name="linkColor">
+            <color red="0.0" green="0.47843137254901963" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+        </systemColor>
+        <systemColor name="systemBackgroundColor">
+            <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+        </systemColor>
+    </resources>
+</document>
