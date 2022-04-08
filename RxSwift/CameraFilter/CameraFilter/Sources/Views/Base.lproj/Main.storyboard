@@ -52,7 +52,6 @@
                         </barButtonItem>
                     </navigationItem>
                     <connections>
-                        <outlet property="addBarButton" destination="bZb-on-Hon" id="OkQ-xm-U3B"/>
                         <outlet property="applyFilterButton" destination="SLE-xV-jmk" id="gen-YI-V7e"/>
                     </connections>
                 </viewController>

@@ -6,13 +6,13 @@
 //
 
 import UIKit
+import RxSwift
 
 class ViewController: UIViewController {
     
     // MARK: - Properties
     
     @IBOutlet weak var applyFilterButton: UIButton!
-    @IBOutlet weak var addBarButton: UIBarButtonItem!
     
     
     // MARK: - Lifecycle
