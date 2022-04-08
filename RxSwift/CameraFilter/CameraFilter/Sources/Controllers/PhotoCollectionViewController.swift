@@ -13,6 +13,7 @@ class PhotoCollectionViewController: UICollectionViewController {
     
     // MARK: - Properties
     
+    private var images = [PHAsset]()
     
     // MARK: - Lifecycle
     
@@ -25,16 +26,23 @@ class PhotoCollectionViewController: UICollectionViewController {
     // MARK: - Funcitons
     
     private func populatePhotos() {
-        PHPhotoLibrary.requestAuthorization { status in
+        
+        PHPhotoLibrary.requestAuthorization { [weak self] status in
             
             if status == .authorized {
                 // 승인
+                let assets = PHAsset.fetchAssets(with: PHAssetMediaType.image, options: nil)
                 
+                assets.enumerateObjects { object, count, stop in
+                    self?.images.append(object)
+                }
+                
+                self?.images.reverse()
                 
                 
             }
-            
         }
+        
     }
     
 }
