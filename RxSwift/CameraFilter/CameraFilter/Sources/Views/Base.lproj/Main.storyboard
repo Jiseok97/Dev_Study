@@ -47,7 +47,7 @@
                     <navigationItem key="navigationItem" title="Camera FIlter" id="ONl-Uo-edI">
                         <barButtonItem key="rightBarButtonItem" systemItem="add" id="bZb-on-Hon">
                             <connections>
-                                <segue destination="cCO-iv-cl7" kind="presentation" modalPresentationStyle="overFullScreen" id="jlD-2L-7D8"/>
+                                <segue destination="cCO-iv-cl7" kind="presentation" modalPresentationStyle="overFullScreen" id="Hmv-3D-kg4"/>
                             </connections>
                         </barButtonItem>
                     </navigationItem>
@@ -74,7 +74,7 @@
                             <inset key="sectionInset" minX="0.0" minY="0.0" maxX="0.0" maxY="0.0"/>
                         </collectionViewFlowLayout>
                         <cells>
-                            <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="" id="1ij-qk-kUO" customClass="PhotoCollectionViewCell" customModule="CameraFilter" customModuleProvider="target">
+                            <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="PhotoCollectionViewCell" id="1ij-qk-kUO" customClass="PhotoCollectionViewCell" customModule="CameraFilter" customModuleProvider="target">
                                 <rect key="frame" x="0.0" y="0.0" width="128" height="128"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <collectionViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" id="Ic3-HR-4Am">
