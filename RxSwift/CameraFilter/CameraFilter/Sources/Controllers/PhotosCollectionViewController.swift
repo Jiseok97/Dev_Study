@@ -10,6 +10,8 @@ import Foundation
 import UIKit
 import Photos
 
+private let reuserIdentifier = "PhotoCollectionViewCell"
+
 class PhotosCollectionViewController: UICollectionViewController {
     
     // MARK: - Properties
@@ -32,7 +34,6 @@ class PhotosCollectionViewController: UICollectionViewController {
         PHPhotoLibrary.requestAuthorization { [weak self] status in
             
             if status == .authorized {
-                
                 // access the photos from photo library
                 let assets = PHAsset.fetchAssets(with: PHAssetMediaType.image, options: nil)
                 
@@ -41,13 +42,35 @@ class PhotosCollectionViewController: UICollectionViewController {
                 }
                 
                 self?.images.reverse()
-                print(self?.images)
-                //self?.collectionView.reloadData()
                 
+                DispatchQueue.main.async {
+                    self?.collectionView.reloadData()
+                }
             }
-            
         }
-        
     }
     
+}
+
+
+// MARK: - UICollectionView DataSource
+
+extension PhotosCollectionViewController {
+    override func numberOfSections(in collectionView: UICollectionView) -> Int {
+        return 1
+    }
+    
+    override func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+        return self.images.count
+    }
+    
+    override func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+        guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: reuserIdentifier, for: indexPath) as? PhotoCollectionViewCell else { fatalError("PhotoCollectionViewCell is not found")}
+        
+        let asset = self.images[indexPath.row]
+        
+        cell.configureCell(with: asset)
+        
+        return cell
+    }
 }
