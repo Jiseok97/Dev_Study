@@ -7,6 +7,7 @@
 //
 
 extension ObservableType {
+
     /**
      Returns a sequence emitting only element _n_ emitted by an Observable
 
@@ -15,66 +16,52 @@ extension ObservableType {
      - parameter index: The index of the required element (starting from 0).
      - returns: An observable sequence that emits the desired element as its own sole emission.
      */
-    @available(*, deprecated, renamed: "element(at:)")
     public func elementAt(_ index: Int)
-        -> Observable<Element> {
-        element(at: index)
-    }
-
-    /**
-     Returns a sequence emitting only element _n_ emitted by an Observable
-
-     - seealso: [elementAt operator on reactivex.io](http://reactivex.io/documentation/operators/elementat.html)
-
-     - parameter index: The index of the required element (starting from 0).
-     - returns: An observable sequence that emits the desired element as its own sole emission.
-     */
-    public func element(at index: Int)
-        -> Observable<Element> {
-        ElementAt(source: self.asObservable(), index: index, throwOnEmpty: true)
+        -> Observable<E> {
+        return ElementAt(source: asObservable(), index: index, throwOnEmpty: true)
     }
 }
 
-final private class ElementAtSink<Observer: ObserverType>: Sink<Observer>, ObserverType {
-    typealias SourceType = Observer.Element
+final fileprivate class ElementAtSink<O: ObserverType> : Sink<O>, ObserverType {
+    typealias SourceType = O.E
     typealias Parent = ElementAt<SourceType>
     
-    let parent: Parent
-    var i: Int
+    let _parent: Parent
+    var _i: Int
     
-    init(parent: Parent, observer: Observer, cancel: Cancelable) {
-        self.parent = parent
-        self.i = parent.index
+    init(parent: Parent, observer: O, cancel: Cancelable) {
+        _parent = parent
+        _i = parent._index
         
         super.init(observer: observer, cancel: cancel)
     }
     
     func on(_ event: Event<SourceType>) {
         switch event {
-        case .next:
+        case .next(_):
 
-            if self.i == 0 {
-                self.forwardOn(event)
-                self.forwardOn(.completed)
+            if (_i == 0) {
+                forwardOn(event)
+                forwardOn(.completed)
                 self.dispose()
             }
             
             do {
-                _ = try decrementChecked(&self.i)
-            } catch let e {
-                self.forwardOn(.error(e))
-                self.dispose()
+                let _ = try decrementChecked(&_i)
+            } catch(let e) {
+                forwardOn(.error(e))
+                dispose()
                 return
             }
             
         case .error(let e):
-            self.forwardOn(.error(e))
+            forwardOn(.error(e))
             self.dispose()
         case .completed:
-            if self.parent.throwOnEmpty {
-                self.forwardOn(.error(RxError.argumentOutOfRange))
+            if (_parent._throwOnEmpty) {
+                forwardOn(.error(RxError.argumentOutOfRange))
             } else {
-                self.forwardOn(.completed)
+                forwardOn(.completed)
             }
             
             self.dispose()
@@ -82,24 +69,25 @@ final private class ElementAtSink<Observer: ObserverType>: Sink<Observer>, Obser
     }
 }
 
-final private class ElementAt<SourceType>: Producer<SourceType> {
-    let source: Observable<SourceType>
-    let throwOnEmpty: Bool
-    let index: Int
+final fileprivate class ElementAt<SourceType> : Producer<SourceType> {
+    
+    let _source: Observable<SourceType>
+    let _throwOnEmpty: Bool
+    let _index: Int
     
     init(source: Observable<SourceType>, index: Int, throwOnEmpty: Bool) {
         if index < 0 {
             rxFatalError("index can't be negative")
         }
 
-        self.source = source
-        self.index = index
-        self.throwOnEmpty = throwOnEmpty
+        self._source = source
+        self._index = index
+        self._throwOnEmpty = throwOnEmpty
     }
     
-    override func run<Observer: ObserverType>(_ observer: Observer, cancel: Cancelable) -> (sink: Disposable, subscription: Disposable) where Observer.Element == SourceType {
+    override func run<O: ObserverType>(_ observer: O, cancel: Cancelable) -> (sink: Disposable, subscription: Disposable) where O.E == SourceType {
         let sink = ElementAtSink(parent: self, observer: observer, cancel: cancel)
-        let subscription = self.source.subscribe(sink)
+        let subscription = _source.subscribe(sink)
         return (sink: sink, subscription: subscription)
     }
 }

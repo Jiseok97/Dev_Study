@@ -7,17 +7,6 @@
 //
 
 extension ObservableType {
-    /**
-     Bypasses elements in an observable sequence as long as a specified condition is true and then returns the remaining elements.
-
-     - seealso: [skipWhile operator on reactivex.io](http://reactivex.io/documentation/operators/skipwhile.html)
-
-     - parameter predicate: A function to test each element for a condition.
-     - returns: An observable sequence that contains the elements from the input sequence starting at the first element in the linear series that does not pass the test specified by predicate.
-     */
-    public func skip(while predicate: @escaping (Element) throws -> Bool) -> Observable<Element> {
-        SkipWhile(source: self.asObservable(), predicate: predicate)
-    }
 
     /**
      Bypasses elements in an observable sequence as long as a specified condition is true and then returns the remaining elements.
@@ -27,61 +16,62 @@ extension ObservableType {
      - parameter predicate: A function to test each element for a condition.
      - returns: An observable sequence that contains the elements from the input sequence starting at the first element in the linear series that does not pass the test specified by predicate.
      */
-    @available(*, deprecated, renamed: "skip(while:)")
-    public func skipWhile(_ predicate: @escaping (Element) throws -> Bool) -> Observable<Element> {
-        SkipWhile(source: self.asObservable(), predicate: predicate)
+    public func skipWhile(_ predicate: @escaping (E) throws -> Bool) -> Observable<E> {
+        return SkipWhile(source: asObservable(), predicate: predicate)
     }
 }
 
-final private class SkipWhileSink<Observer: ObserverType>: Sink<Observer>, ObserverType {
-    typealias Element = Observer.Element 
+final fileprivate class SkipWhileSink<O: ObserverType> : Sink<O>, ObserverType {
+
+    typealias Element = O.E
     typealias Parent = SkipWhile<Element>
 
-    private let parent: Parent
-    private var running = false
+    fileprivate let _parent: Parent
+    fileprivate var _running = false
 
-    init(parent: Parent, observer: Observer, cancel: Cancelable) {
-        self.parent = parent
+    init(parent: Parent, observer: O, cancel: Cancelable) {
+        _parent = parent
         super.init(observer: observer, cancel: cancel)
     }
 
     func on(_ event: Event<Element>) {
         switch event {
         case .next(let value):
-            if !self.running {
+            if !_running {
                 do {
-                    self.running = try !self.parent.predicate(value)
+                    _running = try !_parent._predicate(value)
                 } catch let e {
-                    self.forwardOn(.error(e))
-                    self.dispose()
+                    forwardOn(.error(e))
+                    dispose()
                     return
                 }
             }
 
-            if self.running {
-                self.forwardOn(.next(value))
+            if _running {
+                forwardOn(.next(value))
             }
         case .error, .completed:
-            self.forwardOn(event)
-            self.dispose()
+            forwardOn(event)
+            dispose()
         }
     }
 }
 
-final private class SkipWhile<Element>: Producer<Element> {
+final fileprivate class SkipWhile<Element>: Producer<Element> {
     typealias Predicate = (Element) throws -> Bool
+    typealias PredicateWithIndex = (Element, Int) throws -> Bool
 
-    private let source: Observable<Element>
-    fileprivate let predicate: Predicate
+    fileprivate let _source: Observable<Element>
+    fileprivate let _predicate: Predicate
 
     init(source: Observable<Element>, predicate: @escaping Predicate) {
-        self.source = source
-        self.predicate = predicate
+        _source = source
+        _predicate = predicate
     }
 
-    override func run<Observer: ObserverType>(_ observer: Observer, cancel: Cancelable) -> (sink: Disposable, subscription: Disposable) where Observer.Element == Element {
+    override func run<O : ObserverType>(_ observer: O, cancel: Cancelable) -> (sink: Disposable, subscription: Disposable) where O.E == Element {
         let sink = SkipWhileSink(parent: self, observer: observer, cancel: cancel)
-        let subscription = self.source.subscribe(sink)
+        let subscription = _source.subscribe(sink)
         return (sink: sink, subscription: subscription)
     }
 }

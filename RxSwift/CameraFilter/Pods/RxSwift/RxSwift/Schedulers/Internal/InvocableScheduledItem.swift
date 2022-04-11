@@ -8,15 +8,15 @@
 
 struct InvocableScheduledItem<I: InvocableWithValueType> : InvocableType {
 
-    let invocable: I
-    let state: I.Value
+    let _invocable: I
+    let _state: I.Value
 
     init(invocable: I, state: I.Value) {
-        self.invocable = invocable
-        self.state = state
+        _invocable = invocable
+        _state = state
     }
 
     func invoke() {
-        self.invocable.invoke(self.state)
+        _invocable.invoke(_state)
     }
 }

@@ -19,122 +19,123 @@ extension ObservableType {
      - returns: An observable sequence of windows (instances of `Observable`).
      */
     public func window(timeSpan: RxTimeInterval, count: Int, scheduler: SchedulerType)
-        -> Observable<Observable<Element>> {
+        -> Observable<Observable<E>> {
             return WindowTimeCount(source: self.asObservable(), timeSpan: timeSpan, count: count, scheduler: scheduler)
     }
 }
 
-final private class WindowTimeCountSink<Element, Observer: ObserverType>
-    : Sink<Observer>
+final fileprivate class WindowTimeCountSink<Element, O: ObserverType>
+    : Sink<O>
     , ObserverType
     , LockOwnerType
-    , SynchronizedOnType where Observer.Element == Observable<Element> {
+    , SynchronizedOnType where O.E == Observable<Element> {
     typealias Parent = WindowTimeCount<Element>
+    typealias E = Element
     
-    private let parent: Parent
+    private let _parent: Parent
     
-    let lock = RecursiveLock()
+    let _lock = RecursiveLock()
     
-    private var subject = PublishSubject<Element>()
-    private var count = 0
-    private var windowId = 0
+    private var _subject = PublishSubject<Element>()
+    private var _count = 0
+    private var _windowId = 0
     
-    private let timerD = SerialDisposable()
-    private let refCountDisposable: RefCountDisposable
-    private let groupDisposable = CompositeDisposable()
+    private let _timerD = SerialDisposable()
+    private let _refCountDisposable: RefCountDisposable
+    private let _groupDisposable = CompositeDisposable()
     
-    init(parent: Parent, observer: Observer, cancel: Cancelable) {
-        self.parent = parent
+    init(parent: Parent, observer: O, cancel: Cancelable) {
+        _parent = parent
         
-        _ = self.groupDisposable.insert(self.timerD)
+        let _ = _groupDisposable.insert(_timerD)
         
-        self.refCountDisposable = RefCountDisposable(disposable: self.groupDisposable)
+        _refCountDisposable = RefCountDisposable(disposable: _groupDisposable)
         super.init(observer: observer, cancel: cancel)
     }
     
     func run() -> Disposable {
         
-        self.forwardOn(.next(AddRef(source: self.subject, refCount: self.refCountDisposable).asObservable()))
-        self.createTimer(self.windowId)
+        forwardOn(.next(AddRef(source: _subject, refCount: _refCountDisposable).asObservable()))
+        createTimer(_windowId)
         
-        _ = self.groupDisposable.insert(self.parent.source.subscribe(self))
-        return self.refCountDisposable
+        let _ = _groupDisposable.insert(_parent._source.subscribe(self))
+        return _refCountDisposable
     }
     
     func startNewWindowAndCompleteCurrentOne() {
-        self.subject.on(.completed)
-        self.subject = PublishSubject<Element>()
+        _subject.on(.completed)
+        _subject = PublishSubject<Element>()
         
-        self.forwardOn(.next(AddRef(source: self.subject, refCount: self.refCountDisposable).asObservable()))
+        forwardOn(.next(AddRef(source: _subject, refCount: _refCountDisposable).asObservable()))
     }
 
-    func on(_ event: Event<Element>) {
-        self.synchronizedOn(event)
+    func on(_ event: Event<E>) {
+        synchronizedOn(event)
     }
 
-    func synchronized_on(_ event: Event<Element>) {
+    func _synchronized_on(_ event: Event<E>) {
         var newWindow = false
         var newId = 0
         
         switch event {
         case .next(let element):
-            self.subject.on(.next(element))
+            _subject.on(.next(element))
             
             do {
-                _ = try incrementChecked(&self.count)
-            } catch let e {
-                self.subject.on(.error(e as Swift.Error))
-                self.dispose()
+                let _ = try incrementChecked(&_count)
+            } catch (let e) {
+                _subject.on(.error(e as Swift.Error))
+                dispose()
             }
             
-            if self.count == self.parent.count {
+            if (_count == _parent._count) {
                 newWindow = true
-                self.count = 0
-                self.windowId += 1
-                newId = self.windowId
+                _count = 0
+                _windowId += 1
+                newId = _windowId
                 self.startNewWindowAndCompleteCurrentOne()
             }
             
         case .error(let error):
-            self.subject.on(.error(error))
-            self.forwardOn(.error(error))
-            self.dispose()
+            _subject.on(.error(error))
+            forwardOn(.error(error))
+            dispose()
         case .completed:
-            self.subject.on(.completed)
-            self.forwardOn(.completed)
-            self.dispose()
+            _subject.on(.completed)
+            forwardOn(.completed)
+            dispose()
         }
 
         if newWindow {
-            self.createTimer(newId)
+            createTimer(newId)
         }
     }
     
     func createTimer(_ windowId: Int) {
-        if self.timerD.isDisposed {
+        if _timerD.isDisposed {
             return
         }
         
-        if self.windowId != windowId {
+        if _windowId != windowId {
             return
         }
 
         let nextTimer = SingleAssignmentDisposable()
 
-        self.timerD.disposable = nextTimer
+        _timerD.disposable = nextTimer
 
-        let scheduledRelative = self.parent.scheduler.scheduleRelative(windowId, dueTime: self.parent.timeSpan) { previousWindowId in
+        let scheduledRelative = _parent._scheduler.scheduleRelative(windowId, dueTime: _parent._timeSpan) { previousWindowId in
             
             var newId = 0
             
-            self.lock.performLocked {
-                if previousWindowId != self.windowId {
+            self._lock.performLocked {
+                if previousWindowId != self._windowId {
                     return
                 }
                 
-                self.count = 0
-                self.windowId = self.windowId &+ 1
-                newId = self.windowId
+                self._count = 0
+                self._windowId = self._windowId &+ 1
+                newId = self._windowId
                 self.startNewWindowAndCompleteCurrentOne()
             }
             
@@ -147,20 +148,21 @@ final private class WindowTimeCountSink<Element, Observer: ObserverType>
     }
 }
 
-final private class WindowTimeCount<Element>: Producer<Observable<Element>> {
-    fileprivate let timeSpan: RxTimeInterval
-    fileprivate let count: Int
-    fileprivate let scheduler: SchedulerType
-    fileprivate let source: Observable<Element>
+final fileprivate class WindowTimeCount<Element> : Producer<Observable<Element>> {
+    
+    fileprivate let _timeSpan: RxTimeInterval
+    fileprivate let _count: Int
+    fileprivate let _scheduler: SchedulerType
+    fileprivate let _source: Observable<Element>
     
     init(source: Observable<Element>, timeSpan: RxTimeInterval, count: Int, scheduler: SchedulerType) {
-        self.source = source
-        self.timeSpan = timeSpan
-        self.count = count
-        self.scheduler = scheduler
+        _source = source
+        _timeSpan = timeSpan
+        _count = count
+        _scheduler = scheduler
     }
     
-    override func run<Observer: ObserverType>(_ observer: Observer, cancel: Cancelable) -> (sink: Disposable, subscription: Disposable) where Observer.Element == Observable<Element> {
+    override func run<O : ObserverType>(_ observer: O, cancel: Cancelable) -> (sink: Disposable, subscription: Disposable) where O.E == Observable<Element> {
         let sink = WindowTimeCountSink(parent: self, observer: observer, cancel: cancel)
         let subscription = sink.run()
         return (sink: sink, subscription: subscription)

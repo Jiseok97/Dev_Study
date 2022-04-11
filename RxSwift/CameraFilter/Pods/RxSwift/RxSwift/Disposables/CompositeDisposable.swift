@@ -16,13 +16,14 @@ public final class CompositeDisposable : DisposeBase, Cancelable {
         }
     }
 
-    private var lock = SpinLock()
+    private var _lock = SpinLock()
     
     // state
-    private var disposables: Bag<Disposable>? = Bag()
+    private var _disposables: Bag<Disposable>? = Bag()
 
     public var isDisposed: Bool {
-        self.lock.performLocked { self.disposables == nil }
+        _lock.lock(); defer { _lock.unlock() }
+        return _disposables == nil
     }
     
     public override init() {
@@ -31,35 +32,35 @@ public final class CompositeDisposable : DisposeBase, Cancelable {
     /// Initializes a new instance of composite disposable with the specified number of disposables.
     public init(_ disposable1: Disposable, _ disposable2: Disposable) {
         // This overload is here to make sure we are using optimized version up to 4 arguments.
-        _ = self.disposables!.insert(disposable1)
-        _ = self.disposables!.insert(disposable2)
+        let _ = _disposables!.insert(disposable1)
+        let _ = _disposables!.insert(disposable2)
     }
     
     /// Initializes a new instance of composite disposable with the specified number of disposables.
     public init(_ disposable1: Disposable, _ disposable2: Disposable, _ disposable3: Disposable) {
         // This overload is here to make sure we are using optimized version up to 4 arguments.
-        _ = self.disposables!.insert(disposable1)
-        _ = self.disposables!.insert(disposable2)
-        _ = self.disposables!.insert(disposable3)
+        let _ = _disposables!.insert(disposable1)
+        let _ = _disposables!.insert(disposable2)
+        let _ = _disposables!.insert(disposable3)
     }
     
     /// Initializes a new instance of composite disposable with the specified number of disposables.
     public init(_ disposable1: Disposable, _ disposable2: Disposable, _ disposable3: Disposable, _ disposable4: Disposable, _ disposables: Disposable...) {
         // This overload is here to make sure we are using optimized version up to 4 arguments.
-        _ = self.disposables!.insert(disposable1)
-        _ = self.disposables!.insert(disposable2)
-        _ = self.disposables!.insert(disposable3)
-        _ = self.disposables!.insert(disposable4)
+        let _ = _disposables!.insert(disposable1)
+        let _ = _disposables!.insert(disposable2)
+        let _ = _disposables!.insert(disposable3)
+        let _ = _disposables!.insert(disposable4)
         
         for disposable in disposables {
-            _ = self.disposables!.insert(disposable)
+            let _ = _disposables!.insert(disposable)
         }
     }
     
     /// Initializes a new instance of composite disposable with the specified number of disposables.
     public init(disposables: [Disposable]) {
         for disposable in disposables {
-            _ = self.disposables!.insert(disposable)
+            let _ = _disposables!.insert(disposable)
         }
     }
 
@@ -71,7 +72,7 @@ public final class CompositeDisposable : DisposeBase, Cancelable {
      disposed `nil` will be returned.
      */
     public func insert(_ disposable: Disposable) -> DisposeKey? {
-        let key = self._insert(disposable)
+        let key = _insert(disposable)
         
         if key == nil {
             disposable.dispose()
@@ -81,41 +82,44 @@ public final class CompositeDisposable : DisposeBase, Cancelable {
     }
     
     private func _insert(_ disposable: Disposable) -> DisposeKey? {
-        self.lock.performLocked {
-            let bagKey = self.disposables?.insert(disposable)
-            return bagKey.map(DisposeKey.init)
-        }
+        _lock.lock(); defer { _lock.unlock() }
+
+        let bagKey = _disposables?.insert(disposable)
+        return bagKey.map(DisposeKey.init)
     }
     
     /// - returns: Gets the number of disposables contained in the `CompositeDisposable`.
     public var count: Int {
-        self.lock.performLocked { self.disposables?.count ?? 0 }
+        _lock.lock(); defer { _lock.unlock() }
+        return _disposables?.count ?? 0
     }
     
     /// Removes and disposes the disposable identified by `disposeKey` from the CompositeDisposable.
     ///
     /// - parameter disposeKey: Key used to identify disposable to be removed.
     public func remove(for disposeKey: DisposeKey) {
-        self._remove(for: disposeKey)?.dispose()
+        _remove(for: disposeKey)?.dispose()
     }
     
     private func _remove(for disposeKey: DisposeKey) -> Disposable? {
-        self.lock.performLocked { self.disposables?.removeKey(disposeKey.key) }
+        _lock.lock(); defer { _lock.unlock() }
+        return _disposables?.removeKey(disposeKey.key)
     }
     
     /// Disposes all disposables in the group and removes them from the group.
     public func dispose() {
-        if let disposables = self._dispose() {
+        if let disposables = _dispose() {
             disposeAll(in: disposables)
         }
     }
 
     private func _dispose() -> Bag<Disposable>? {
-        self.lock.performLocked {
-            let current = self.disposables
-            self.disposables = nil
-            return current
-        }
+        _lock.lock(); defer { _lock.unlock() }
+
+        let disposeBag = _disposables
+        _disposables = nil
+
+        return disposeBag
     }
 }
 
@@ -123,7 +127,7 @@ extension Disposables {
 
     /// Creates a disposable with the given disposables.
     public static func create(_ disposable1: Disposable, _ disposable2: Disposable, _ disposable3: Disposable) -> Cancelable {
-        CompositeDisposable(disposable1, disposable2, disposable3)
+        return CompositeDisposable(disposable1, disposable2, disposable3)
     }
     
     /// Creates a disposable with the given disposables.

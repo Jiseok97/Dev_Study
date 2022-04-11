@@ -2,7 +2,8 @@
 //  ViewController.swift
 //  CameraFilter
 //
-//  Created by 이지석 on 2022/04/07.
+//  Created by Mohammad Azam on 2/13/19.
+//  Copyright © 2019 Mohammad Azam. All rights reserved.
 //
 
 import UIKit
@@ -10,29 +11,14 @@ import RxSwift
 
 class ViewController: UIViewController {
     
-    // MARK: - Properties
-    
-    @IBOutlet weak var applyFilterButton: UIButton!
-    
-    
-    // MARK: - Lifecycle
+    // MARK: - LifeCycle
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        configureUI()
+         self.navigationController?.navigationBar.prefersLargeTitles = true
+        
     }
 
-    
-    // MARK: - Functions
-    
-    private func configureUI() {
-        // for navigation bar
-        self.navigationController?.navigationBar.prefersLargeTitles = true
-        
-        // for UI components
-        applyFilterButton.isHidden = true
-        applyFilterButton.layer.cornerRadius = applyFilterButton.frame.height / 2
-    }
 
 }
 

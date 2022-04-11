@@ -35,19 +35,19 @@ struct Bag<T> : CustomDebugStringConvertible {
     
     typealias Entry = (key: BagKey, value: T)
  
-    private var _nextKey: BagKey = BagKey(rawValue: 0)
+    fileprivate var _nextKey: BagKey = BagKey(rawValue: 0)
 
     // data
 
     // first fill inline variables
-    var _key0: BagKey?
-    var _value0: T?
+    var _key0: BagKey? = nil
+    var _value0: T? = nil
 
     // then fill "array dictionary"
     var _pairs = ContiguousArray<Entry>()
 
     // last is sparse dictionary
-    var _dictionary: [BagKey: T]?
+    var _dictionary: [BagKey : T]? = nil
 
     var _onlyFastPath = true
 
@@ -122,10 +122,12 @@ struct Bag<T> : CustomDebugStringConvertible {
             return existingObject
         }
 
-        for i in 0 ..< _pairs.count where _pairs[i].key == key {
-            let value = _pairs[i].value
-            _pairs.remove(at: i)
-            return value
+        for i in 0 ..< _pairs.count {
+            if _pairs[i].key == key {
+                let value = _pairs[i].value
+                _pairs.remove(at: i)
+                return value
+            }
         }
 
         return nil
@@ -135,7 +137,7 @@ struct Bag<T> : CustomDebugStringConvertible {
 extension Bag {
     /// A textual representation of `self`, suitable for debugging.
     var debugDescription : String {
-        "\(self.count) elements in Bag"
+        return "\(self.count) elements in Bag"
     }
 }
 
@@ -171,11 +173,11 @@ extension Bag {
 }
 
 extension BagKey: Hashable {
-    func hash(into hasher: inout Hasher) {
-        hasher.combine(rawValue)
+    var hashValue: Int {
+        return rawValue.hashValue
     }
 }
 
 func ==(lhs: BagKey, rhs: BagKey) -> Bool {
-    lhs.rawValue == rhs.rawValue
+    return lhs.rawValue == rhs.rawValue
 }

@@ -9,38 +9,40 @@
 /// Represents an Action-based disposable.
 ///
 /// When dispose method is called, disposal action will be dereferenced.
-private final class AnonymousDisposable : DisposeBase, Cancelable {
+fileprivate final class AnonymousDisposable : DisposeBase, Cancelable {
     public typealias DisposeAction = () -> Void
 
-    private let disposed = AtomicInt(0)
-    private var disposeAction: DisposeAction?
+    private var _isDisposed = AtomicInt(0)
+    private var _disposeAction: DisposeAction?
 
     /// - returns: Was resource disposed.
     public var isDisposed: Bool {
-        isFlagSet(self.disposed, 1)
+        return _isDisposed.isFlagSet(1)
     }
 
     /// Constructs a new disposable with the given action used for disposal.
     ///
     /// - parameter disposeAction: Disposal action which will be run upon calling `dispose`.
-    private init(_ disposeAction: @escaping DisposeAction) {
-        self.disposeAction = disposeAction
+    fileprivate init(_ disposeAction: @escaping DisposeAction) {
+        _disposeAction = disposeAction
         super.init()
     }
-
+    
     // Non-deprecated version of the constructor, used by `Disposables.create(with:)`
     fileprivate init(disposeAction: @escaping DisposeAction) {
-        self.disposeAction = disposeAction
+        _disposeAction = disposeAction
         super.init()
     }
-
+    
     /// Calls the disposal action if and only if the current instance hasn't been disposed yet.
     ///
     /// After invoking disposal action, disposal action will be dereferenced.
     fileprivate func dispose() {
-        if fetchOr(self.disposed, 1) == 0 {
-            if let action = self.disposeAction {
-                self.disposeAction = nil
+        if _isDisposed.fetchOr(1) == 0 {
+            assert(_isDisposed.load() == 1)
+
+            if let action = _disposeAction {
+                _disposeAction = nil
                 action()
             }
         }
@@ -48,12 +50,12 @@ private final class AnonymousDisposable : DisposeBase, Cancelable {
 }
 
 extension Disposables {
-
+    
     /// Constructs a new disposable with the given action used for disposal.
     ///
     /// - parameter dispose: Disposal action which will be run upon calling `dispose`.
-    public static func create(with dispose: @escaping () -> Void) -> Cancelable {
-        AnonymousDisposable(disposeAction: dispose)
+    public static func create(with dispose: @escaping () -> ()) -> Cancelable {
+        return AnonymousDisposable(disposeAction: dispose)
     }
-
+    
 }

@@ -6,25 +6,27 @@
 //  Copyright © 2015 Krunoslav Zaher. All rights reserved.
 //
 
-final class AnonymousObserver<Element>: ObserverBase<Element> {
+final class AnonymousObserver<ElementType> : ObserverBase<ElementType> {
+    typealias Element = ElementType
+    
     typealias EventHandler = (Event<Element>) -> Void
     
-    private let eventHandler : EventHandler
+    private let _eventHandler : EventHandler
     
     init(_ eventHandler: @escaping EventHandler) {
 #if TRACE_RESOURCES
-        _ = Resources.incrementTotal()
+        let _ = Resources.incrementTotal()
 #endif
-        self.eventHandler = eventHandler
+        _eventHandler = eventHandler
     }
 
     override func onCore(_ event: Event<Element>) {
-        self.eventHandler(event)
+        return _eventHandler(event)
     }
     
 #if TRACE_RESOURCES
     deinit {
-        _ = Resources.decrementTotal()
+        let _ = Resources.decrementTotal()
     }
 #endif
 }

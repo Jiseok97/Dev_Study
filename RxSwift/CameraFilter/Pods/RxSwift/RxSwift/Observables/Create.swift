@@ -17,60 +17,60 @@ extension ObservableType {
      - parameter subscribe: Implementation of the resulting observable sequence's `subscribe` method.
      - returns: The observable sequence with the specified implementation for the `subscribe` method.
      */
-    public static func create(_ subscribe: @escaping (AnyObserver<Element>) -> Disposable) -> Observable<Element> {
-        AnonymousObservable(subscribe)
+    public static func create(_ subscribe: @escaping (AnyObserver<E>) -> Disposable) -> Observable<E> {
+        return AnonymousObservable(subscribe)
     }
 }
 
-final private class AnonymousObservableSink<Observer: ObserverType>: Sink<Observer>, ObserverType {
-    typealias Element = Observer.Element 
-    typealias Parent = AnonymousObservable<Element>
+final fileprivate class AnonymousObservableSink<O: ObserverType> : Sink<O>, ObserverType {
+    typealias E = O.E
+    typealias Parent = AnonymousObservable<E>
 
     // state
-    private let isStopped = AtomicInt(0)
+    private var _isStopped = AtomicInt(0)
 
     #if DEBUG
-        private let synchronizationTracker = SynchronizationTracker()
+        fileprivate let _synchronizationTracker = SynchronizationTracker()
     #endif
 
-    override init(observer: Observer, cancel: Cancelable) {
+    override init(observer: O, cancel: Cancelable) {
         super.init(observer: observer, cancel: cancel)
     }
 
-    func on(_ event: Event<Element>) {
+    func on(_ event: Event<E>) {
         #if DEBUG
-            self.synchronizationTracker.register(synchronizationErrorMessage: .default)
-            defer { self.synchronizationTracker.unregister() }
+            _synchronizationTracker.register(synchronizationErrorMessage: .default)
+            defer { _synchronizationTracker.unregister() }
         #endif
         switch event {
         case .next:
-            if load(self.isStopped) == 1 {
+            if _isStopped.load() == 1 {
                 return
             }
-            self.forwardOn(event)
+            forwardOn(event)
         case .error, .completed:
-            if fetchOr(self.isStopped, 1) == 0 {
-                self.forwardOn(event)
-                self.dispose()
+            if _isStopped.fetchOr(1) == 0 {
+                forwardOn(event)
+                dispose()
             }
         }
     }
 
     func run(_ parent: Parent) -> Disposable {
-        parent.subscribeHandler(AnyObserver(self))
+        return parent._subscribeHandler(AnyObserver(self))
     }
 }
 
-final private class AnonymousObservable<Element>: Producer<Element> {
+final fileprivate class AnonymousObservable<Element> : Producer<Element> {
     typealias SubscribeHandler = (AnyObserver<Element>) -> Disposable
 
-    let subscribeHandler: SubscribeHandler
+    let _subscribeHandler: SubscribeHandler
 
     init(_ subscribeHandler: @escaping SubscribeHandler) {
-        self.subscribeHandler = subscribeHandler
+        _subscribeHandler = subscribeHandler
     }
 
-    override func run<Observer: ObserverType>(_ observer: Observer, cancel: Cancelable) -> (sink: Disposable, subscription: Disposable) where Observer.Element == Element {
+    override func run<O : ObserverType>(_ observer: O, cancel: Cancelable) -> (sink: Disposable, subscription: Disposable) where O.E == Element {
         let sink = AnonymousObservableSink(observer: observer, cancel: cancel)
         let subscription = sink.run(self)
         return (sink: sink, subscription: subscription)
