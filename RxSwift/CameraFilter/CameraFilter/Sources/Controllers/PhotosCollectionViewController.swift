@@ -9,12 +9,18 @@
 import Foundation
 import UIKit
 import Photos
+import RxSwift
 
 private let reuserIdentifier = "PhotoCollectionViewCell"
 
 class PhotosCollectionViewController: UICollectionViewController {
     
     // MARK: - Properties
+    
+    private let seletedPhotoSubject = PublishSubject<UIImage>()
+    var seletedPhoto: Observable<UIImage> {
+        return seletedPhotoSubject.asObservable()
+    }
     
     private var images = [PHAsset]()
     
@@ -53,7 +59,7 @@ class PhotosCollectionViewController: UICollectionViewController {
 }
 
 
-// MARK: - UICollectionView DataSource
+// MARK: - UICollectionView DataSource/Delegate
 
 extension PhotosCollectionViewController {
     override func numberOfSections(in collectionView: UICollectionView) -> Int {
@@ -72,5 +78,26 @@ extension PhotosCollectionViewController {
         cell.configureCell(with: asset)
         
         return cell
+    }
+    
+    override func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        
+        let seletedAsset = self.images[indexPath.row]
+        PHImageManager.default().requestImage(for: seletedAsset, targetSize: CGSize(width: 300, height: 300), contentMode: .aspectFit, options: nil) { [weak self] image, info in
+            
+            guard let info = info else { return }
+            
+            let isDegradedImage = info["PHImageResultIsDegradedKey"] as! Bool
+            
+            if !isDegradedImage{
+                if let image = image {
+                    self?.seletedPhotoSubject.onNext(image)
+                    self?.dismiss(animated: true, completion: nil)
+                }
+            }
+            
+        }
+        
+        
     }
 }
