@@ -95,9 +95,7 @@ extension PhotosCollectionViewController {
                     self?.dismiss(animated: true, completion: nil)
                 }
             }
-            
         }
-        
-        
     }
+    
 }

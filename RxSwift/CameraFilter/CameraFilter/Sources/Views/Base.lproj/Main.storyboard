@@ -17,25 +17,32 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="Vk9-as-KqC">
-                                <rect key="frame" x="0.0" y="44" width="375" height="500.5"/>
+                                <rect key="frame" x="0.0" y="44" width="375" height="467"/>
                             </imageView>
                             <button hidden="YES" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="oRV-LM-NVm">
-                                <rect key="frame" x="148.5" y="600" width="78" height="30"/>
+                                <rect key="frame" x="137.5" y="535" width="100" height="40"/>
                                 <color key="backgroundColor" red="0.20392156859999999" green="0.59607843140000005" blue="0.85882352939999995" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="100" id="99Q-aD-l54"/>
+                                    <constraint firstAttribute="height" constant="40" id="rtG-s5-n5x"/>
+                                </constraints>
                                 <state key="normal" title="Apply Filter">
                                     <color key="titleColor" red="0.99381813910000005" green="1" blue="0.98309177110000001" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
                                 </state>
+                                <connections>
+                                    <action selector="applyFilterButtonTapped" destination="BYZ-38-t0r" eventType="touchUpInside" id="eZ4-Tb-tD3"/>
+                                </connections>
                             </button>
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="6Tk-OE-BBY"/>
                         <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                         <constraints>
+                            <constraint firstItem="oRV-LM-NVm" firstAttribute="top" secondItem="Vk9-as-KqC" secondAttribute="bottom" constant="24" id="14I-dw-DlM"/>
                             <constraint firstItem="Vk9-as-KqC" firstAttribute="top" secondItem="6Tk-OE-BBY" secondAttribute="top" id="BYF-Xn-Jhy"/>
-                            <constraint firstItem="6Tk-OE-BBY" firstAttribute="bottom" secondItem="oRV-LM-NVm" secondAttribute="bottom" constant="37" id="JtV-ZA-gjH"/>
                             <constraint firstItem="oRV-LM-NVm" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" id="URi-c0-gcn"/>
                             <constraint firstItem="Vk9-as-KqC" firstAttribute="width" secondItem="8bC-Xf-vdC" secondAttribute="width" id="WNi-Hh-QSR"/>
                             <constraint firstItem="Vk9-as-KqC" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" id="ZDd-oD-lWK"/>
-                            <constraint firstItem="Vk9-as-KqC" firstAttribute="height" secondItem="8bC-Xf-vdC" secondAttribute="height" multiplier="0.75" id="gyN-ht-Zcf"/>
+                            <constraint firstItem="Vk9-as-KqC" firstAttribute="height" secondItem="8bC-Xf-vdC" secondAttribute="height" multiplier="0.7" id="gyN-ht-Zcf"/>
                         </constraints>
                     </view>
                     <navigationItem key="navigationItem" title="Camera Filter" id="Ad0-Dj-ZdA">
@@ -46,6 +53,7 @@
                         </barButtonItem>
                     </navigationItem>
                     <connections>
+                        <outlet property="applyFilterButton" destination="oRV-LM-NVm" id="kSs-31-huM"/>
                         <outlet property="photoImageView" destination="Vk9-as-KqC" id="T0v-pa-VcZ"/>
                     </connections>
                 </viewController>
