@@ -59,14 +59,12 @@ class ViewController: UIViewController {
         
         guard let sourceImage = self.photoImageView.image else { return }
         
-        FilterService().applyeFilter(to: sourceImage) { filteredImage in
-            
-            DispatchQueue.main.async {
-                self.photoImageView.image = filteredImage
-            }
-            
-        }
-        
+        FilterService().applyeFilter(to: sourceImage)
+            .subscribe(onNext: { filteredImage in
+                DispatchQueue.main.async {
+                    self.photoImageView.image = filteredImage
+                }
+            }).disposed(by: disposeBag)
     }
     
 }
