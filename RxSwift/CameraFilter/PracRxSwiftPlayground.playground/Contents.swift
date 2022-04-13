@@ -1,6 +1,44 @@
 import UIKit
 import RxSwift
 import RxCocoa
+import PlaygroundSupport
+
+// MARK: - Ignore
+/// 끝날 때 구독 내용 호출됨, 그 전 요소 추가되도 무시
+//let strikes = PublishSubject<String>()
+//
+//let disposeBag = DisposeBag()
+//
+//strikes
+//    .ignoreElements()
+//    .subscribe { _ in
+//        print("Subscription is called")
+//    }.disposed(by: disposeBag)
+//
+//strikes.onNext("A")
+//strikes.onNext("B")
+//strikes.onNext("C")
+//
+//strikes.onCompleted()
+
+
+// MARK: - elementAt(Index)
+// 해당 인덱스일 때 구독 기능 활성화
+
+//let strikes = PublishSubject<String>()
+//
+//let disposeBag = DisposeBag()
+//
+//strikes.elementAt(2)
+//    .subscribe(onNext: { _ in
+//        print("Current index is 2")
+//    })
+//
+//strikes.onNext("X1")
+//strikes.onNext("X2")
+//strikes.onNext("X3")
+//strikes.onNext("X4")
+
 
 // MARK: - Base
 
@@ -35,8 +73,8 @@ import RxCocoa
 //}, onCompleted: {
 //    print("DEBUG: onCompleted")
 //})
-//
-//// Dispose → 구독 해제
+////
+////// Dispose → 구독 해제
 //let subscription = observable4.subscribe(onNext: { element in
 //    print("DEBUG: element is \(element)")
 //})
@@ -49,12 +87,29 @@ import RxCocoa
 //// DisposeBag → disposeBag = DisposeBag() 이렇게 사용가능
 //// 한번에 모든 Observer를 지워준다.
 //// 각각의 비동기 작업들을 disposeBag에 담아두고 한번에 처분하는 형식
-//let disposeBag = DisposeBag()
+//var disposeBag = DisposeBag()
+//let observable = Observable.from([1,2,3,4])
 //
+//observable.subscribe(onNext: { element in
+//    print("DEBUG: element is \(element)")
+//}, onDisposed: {
+//    print("Dispose")
+//}).disposed(by: disposeBag)
+//
+//disposeBag = nil
+////print("DEBUG: disposbag = DisposeBag()")
+//
+//observable.subscribe(onNext: { element in
+//    print("DEBUG: element is \(element)")
+//})
+
+
 //Observable.of("A", "B", "C")
 //    .subscribe {
 //        print("DEBUG: value is \($0)")
 //    }.disposed(by: disposeBag)
+
+
 //
 //Observable<String>.create { observer in
 //
@@ -117,18 +172,18 @@ import RxCocoa
 //
 //// MARK: - ReplaySubject
 //
-//let disposeBag = DisposeBag()
-//
-////// 버퍼의 크기만큼만 구독 전 최신 이벤트를 전달 받을 수 있다.
-//let subject = ReplaySubject<String>.create(bufferSize: 2)
-//
-//subject.onNext("Event 1")           // 버퍼 크기가 2이므로, Event 1은 발생 X
-//subject.onNext("Event 2")
-//subject.onNext("Event 3")
-//
-//subject.subscribe { event in
-//    print("DEBUG: event is \(event)")
-//}
+let disposeBag = DisposeBag()
+
+//// 버퍼의 크기만큼만 구독 전 최신 이벤트를 전달 받을 수 있다.
+let subject = ReplaySubject<String>.create(bufferSize: 2)
+
+subject.onNext("Event 1")           // 버퍼 크기가 2이므로, Event 1은 발생 X
+subject.onNext("Event 2")
+subject.onNext("Event 3")
+
+subject.subscribe { event in
+    print("DEBUG: event is \(event)")
+}
 //
 //subject.onNext("Event 4")           // 두번째 구독에서 버퍼 크키가 2이므로, Event 4는 두번째 구독에서 전달 X
 //subject.onNext("Event 5")
@@ -158,27 +213,27 @@ import RxCocoa
 //        print("DEBUG: value is \($0)")
 //    }
 //relay.accept("Goodbye World")
-
-
-// 배열 값 넣기 방법 1
-// value에 append해주고 그 value를 accept 해주기
-arrayValue.append("Item 1")
-arrayRelay.accept(arrayValue)
-
-arrayRelay.asObservable()
-    .subscribe {
-        print("DEBUG: arrayRelay Item is \($0)")
-    }
-
-arrayValue.append("Item 2")
-arrayRelay.accept(arrayValue)
-
-
-// 배열 값 넣기 방법 2
-// 기존 value 값에 더해주기
-let arrayRelay2 = BehaviorRelay(value: ["Item 1"])
-arrayRelay2.accept(arrayRelay2.value + ["Item 2"])
-arrayRelay2.asObservable()
-    .subscribe {
-        print("DEBUG: arrayRelay2 item is \($0)")
-    }
+//
+//
+//// 배열 값 넣기 방법 1
+//// value에 append해주고 그 value를 accept 해주기
+//arrayValue.append("Item 1")
+//arrayRelay.accept(arrayValue)
+//
+//arrayRelay.asObservable()
+//    .subscribe {
+//        print("DEBUG: arrayRelay Item is \($0)")
+//    }
+//
+//arrayValue.append("Item 2")
+//arrayRelay.accept(arrayValue)
+//
+//
+//// 배열 값 넣기 방법 2
+//// 기존 value 값에 더해주기
+//let arrayRelay2 = BehaviorRelay(value: ["Item 1"])
+//arrayRelay2.accept(arrayRelay2.value + ["Item 2"])
+//arrayRelay2.asObservable()
+//    .subscribe {
+//        print("DEBUG: arrayRelay2 item is \($0)")
+//    }

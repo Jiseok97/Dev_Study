@@ -8,5 +8,6 @@ target 'CameraFilter' do
   # Pods for CameraFilter
 
   pod 'RxSwift','~> 4.0'
+  pod 'RxCocoa'
 
 end
