@@ -23,7 +23,7 @@ import PlaygroundSupport
 
 
 // MARK: - elementAt(Index)
-// 해당 인덱스일 때 구독 기능 활성화
+// 해당 인덱스일 때 Subscribe 클로져 실행
 
 //let strikes = PublishSubject<String>()
 //
@@ -40,20 +40,125 @@ import PlaygroundSupport
 //strikes.onNext("X4")
 
 
+// MARK: - Filter
+
+// 필터 조건에 맞는 요소들만 전달
+
+//let disposeBag = DisposeBag()
+//
+//Observable.of(1,2,3,4,5,6,7)
+//    .filter { $0 % 2 == 0 }
+//    .subscribe(onNext: {
+//        print("$0 = \($0)")
+//    }).disposed(by: disposeBag)
+
+
+// MARK: - Skip
+// 해당 인덱스 다음 요소부터 전달
+
+//let disposeBag = DisposeBag()
+
+//Observable.of("A", "B", "C", "D", "E")
+//    .skip(3)
+//    .subscribe(onNext: {
+//        print("$0 = \($0)")
+//    }).disposed(by: disposeBag)
+
+
+// MARK: - skipWhile
+// 조건이 거짓이 되는 경우부터의 요소들을 전달
+
+//let disposeBag = DisposeBag()
+
+//Observable.of(2,2,3,4,4)
+//    .skipWhile { $0 % 2 == 0 }
+//    .subscribe(onNext: {
+//        print("$0 = \($0)")
+//    }).disposed(by: disposeBag)
+
+
+// MARK: - skipUntil
+// skipUntil의 매개변수 값에 어떤 요소가 들어가면 실행함 == 방아쇠?
+
+//let disposeBag = DisposeBag()
+//
+//let subject = PublishSubject<String>()
+//let trigger = PublishSubject<String>()
+//
+//subject.skipUntil(trigger)
+//    .subscribe(onNext: {
+//        print("$0 = \($0)")
+//    }).disposed(by: disposeBag)
+//
+//subject.onNext("A")
+//subject.onNext("B")
+//
+//trigger.onNext("T")
+//
+//subject.onNext("C")
+
+
+// MARK: - take
+// 해당 값을 얻을때까지 계속 구독 진행
+
+//let disposeBag = DisposeBag()
+//
+//Observable.of(1,2,3,4,5,6)
+//    .take(3)
+//    .subscribe(onNext: {
+//        print("$0 = \($0)")
+//    }).disposed(by: disposeBag)
+
+
+// MARK: - takeWhile
+// 해당 while 조건이 거짓이 될 때 멈춤, 참일 경우 계속 진행
+
+//let disposeBag = DisposeBag()
+//
+//Observable.of(2,4,6,7,8,9)
+//    .takeWhile {
+//        return $0 % 2 == 0
+//    }.subscribe(onNext: {
+//        print("$0 = \($0)")
+//    }).disposed(by: disposeBag)
+
+
+// MARK: - takeUntil
+// skipUntil과 반대 개념, takeUntil의 매개변수에 값이 전달되면 takeUntil을 선언한 변수가 저장했던 요소들만 반환
+
+let disposeBag = DisposeBag()
+
+let subject = PublishSubject<String>()
+let trigger = PublishSubject<String>()
+
+subject.takeUntil(trigger)
+    .subscribe(onNext: {
+        print("$0 = \($0)")
+    }).disposed(by: disposeBag)
+
+subject.onNext("A")
+subject.onNext("B")
+
+trigger.onNext("STOP")
+
+subject.onNext("C")
+
+
+
 // MARK: - Base
 
 //// Int
 //let observable = Observable.just(1)
-//
+
 //// Int
 //let observable2 = Observable.of(1,2,3)
-//
+
 //// Array
 //let observable3 = Observable.of([1,2,3])
-//
+
 //// Int
 //let observable4 = Observable.from([1,2,3,4,5])
-//
+
 ///// 언래핑 필요 O
 //observable4.subscribe { event in
 //    if let element = event.element {
@@ -65,8 +170,7 @@ import PlaygroundSupport
 //        print("DEBUG: element is \(element)")
 //    }
 //}
-//
-//
+
 ///// 언래핑 필요 X
 //observable4.subscribe(onNext: { element in
 //    print("DEBUG: need not unwarapping, element is \(element)")
@@ -80,10 +184,11 @@ import PlaygroundSupport
 //})
 //// 구독 해제, 더 이상의 이벤트 발생 X
 //subscription.dispose()
-//
-//
+
+
+
 //// MARK: - DisposeBag
-//
+
 //// DisposeBag → disposeBag = DisposeBag() 이렇게 사용가능
 //// 한번에 모든 Observer를 지워준다.
 //// 각각의 비동기 작업들을 disposeBag에 담아두고 한번에 처분하는 형식
@@ -110,7 +215,7 @@ import PlaygroundSupport
 //    }.disposed(by: disposeBag)
 
 
-//
+
 //Observable<String>.create { observer in
 //
 //    observer.onNext("A")
@@ -128,7 +233,9 @@ import PlaygroundSupport
 //} onDisposed: {
 //    print("DEBUG: onDisposed")
 //}
-//
+
+
+
 //// MARK: - PublishSubject
 //
 //let disposeBag = DisposeBag()
@@ -149,8 +256,9 @@ import PlaygroundSupport
 //subject.dispose()
 //
 //subject.onNext("Event 4")       // Dispose로 인해 더 이상 구독되지 않아 출력 X
-//
-//
+
+
+
 //// MARK: - BehaviorSubject
 //
 //let disposeBag = DisposeBag()
@@ -168,22 +276,22 @@ import PlaygroundSupport
 //
 //subject.onNext("Event 2")
 //subject.onNext("Event 3")
-//
-//
+
+
 //// MARK: - ReplaySubject
 //
-let disposeBag = DisposeBag()
-
-//// 버퍼의 크기만큼만 구독 전 최신 이벤트를 전달 받을 수 있다.
-let subject = ReplaySubject<String>.create(bufferSize: 2)
-
-subject.onNext("Event 1")           // 버퍼 크기가 2이므로, Event 1은 발생 X
-subject.onNext("Event 2")
-subject.onNext("Event 3")
-
-subject.subscribe { event in
-    print("DEBUG: event is \(event)")
-}
+//let disposeBag = DisposeBag()
+//
+////// 버퍼의 크기만큼만 구독 전 최신 이벤트를 전달 받을 수 있다.
+//let subject = ReplaySubject<String>.create(bufferSize: 2)
+//
+//subject.onNext("Event 1")           // 버퍼 크기가 2이므로, Event 1은 발생 X
+//subject.onNext("Event 2")
+//subject.onNext("Event 3")
+//
+//subject.subscribe { event in
+//    print("DEBUG: event is \(event)")
+//}
 //
 //subject.onNext("Event 4")           // 두번째 구독에서 버퍼 크키가 2이므로, Event 4는 두번째 구독에서 전달 X
 //subject.onNext("Event 5")
@@ -194,8 +302,8 @@ subject.subscribe { event in
 //subject.subscribe {
 //    print("DEBUG: Second subscribe event is \($0)")
 //}
-//
-//
+
+
 //// MARK: - BehaviorRelay
 //
 //// Variable이 사용이 되지 않음에 따라 BehaviorRelay을 사용한다.
@@ -213,8 +321,8 @@ subject.subscribe { event in
 //        print("DEBUG: value is \($0)")
 //    }
 //relay.accept("Goodbye World")
-//
-//
+
+
 //// 배열 값 넣기 방법 1
 //// value에 append해주고 그 value를 accept 해주기
 //arrayValue.append("Item 1")
@@ -227,8 +335,8 @@ subject.subscribe { event in
 //
 //arrayValue.append("Item 2")
 //arrayRelay.accept(arrayValue)
-//
-//
+
+
 //// 배열 값 넣기 방법 2
 //// 기존 value 값에 더해주기
 //let arrayRelay2 = BehaviorRelay(value: ["Item 1"])
