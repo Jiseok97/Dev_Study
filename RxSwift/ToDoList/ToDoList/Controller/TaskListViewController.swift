@@ -20,14 +20,24 @@ class TaskListViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        configureUI()
         configureTableView()
     }
     
     // MARK: - Functions
     
+    private func configureUI() {
+        self.navigationController?.navigationBar.prefersLargeTitles = true
+    }
+    
     private func configureTableView() {
         listTableView.delegate = self
         listTableView.dataSource = self
+    }
+    
+    @IBAction func AddButtonTapped() {
+        let controller = AddTaskViewController()
+        present(controller, animated: true, completion: nil)
     }
     
 }

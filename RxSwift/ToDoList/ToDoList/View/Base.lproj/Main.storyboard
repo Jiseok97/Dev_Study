@@ -8,7 +8,7 @@
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <scenes>
-        <!--Jiseok's To-Do-->
+        <!--JSList-->
         <scene sceneID="tne-QT-ifu">
             <objects>
                 <viewController id="BYZ-38-t0r" customClass="TaskListViewController" customModule="ToDoList" customModuleProvider="target" sceneMemberID="viewController">
@@ -17,7 +17,7 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <segmentedControl opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="top" segmentControlStyle="plain" selectedSegmentIndex="0" translatesAutoresizingMaskIntoConstraints="NO" id="H7C-Fj-mTp">
-                                <rect key="frame" x="69.5" y="112" width="275" height="32"/>
+                                <rect key="frame" x="69.5" y="100" width="275" height="32"/>
                                 <segments>
                                     <segment title="All"/>
                                     <segment title="High"/>
@@ -26,7 +26,7 @@
                                 </segments>
                             </segmentedControl>
                             <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="-1" estimatedSectionHeaderHeight="-1" sectionFooterHeight="-1" estimatedSectionFooterHeight="-1" translatesAutoresizingMaskIntoConstraints="NO" id="gvC-IN-wlg">
-                                <rect key="frame" x="0.0" y="167" width="414" height="695"/>
+                                <rect key="frame" x="0.0" y="155" width="414" height="707"/>
                                 <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                             </tableView>
                         </subviews>
@@ -35,13 +35,20 @@
                         <constraints>
                             <constraint firstItem="H7C-Fj-mTp" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" id="BJb-CE-5Hc"/>
                             <constraint firstItem="gvC-IN-wlg" firstAttribute="top" secondItem="H7C-Fj-mTp" secondAttribute="bottom" constant="24" id="CUO-VG-4DO"/>
-                            <constraint firstItem="H7C-Fj-mTp" firstAttribute="top" secondItem="6Tk-OE-BBY" secondAttribute="top" constant="24" id="EZQ-ma-X2G"/>
+                            <constraint firstItem="H7C-Fj-mTp" firstAttribute="top" secondItem="6Tk-OE-BBY" secondAttribute="top" constant="12" id="EZQ-ma-X2G"/>
                             <constraint firstItem="6Tk-OE-BBY" firstAttribute="bottom" secondItem="gvC-IN-wlg" secondAttribute="bottom" id="NYE-aP-elz"/>
                             <constraint firstItem="6Tk-OE-BBY" firstAttribute="trailing" secondItem="gvC-IN-wlg" secondAttribute="trailing" id="s5B-Uw-Oom"/>
                             <constraint firstItem="gvC-IN-wlg" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" id="yto-GD-Fz6"/>
                         </constraints>
                     </view>
-                    <navigationItem key="navigationItem" title="Jiseok's To-Do" id="avP-dO-uqb"/>
+                    <navigationItem key="navigationItem" title="JSList" id="avP-dO-uqb">
+                        <barButtonItem key="rightBarButtonItem" image="plus" catalog="system" id="0r9-Z2-U4G">
+                            <color key="tintColor" white="0.33333333329999998" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                            <connections>
+                                <action selector="AddButtonTapped" destination="BYZ-38-t0r" id="Zv9-ZI-c08"/>
+                            </connections>
+                        </barButtonItem>
+                    </navigationItem>
                     <connections>
                         <outlet property="listTableView" destination="gvC-IN-wlg" id="xdx-Tw-KQf"/>
                         <outlet property="prioritySegmentedControl" destination="H7C-Fj-mTp" id="Bif-mQ-zwY"/>
@@ -71,6 +78,7 @@
         </scene>
     </scenes>
     <resources>
+        <image name="plus" catalog="system" width="128" height="113"/>
         <systemColor name="systemBackgroundColor">
             <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
         </systemColor>
