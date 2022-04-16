@@ -10,6 +10,7 @@ import UIKit
 class AddTaskViewController: UIViewController {
 
     // MARK: - Properties
+
     
     
     // MARK: - Lifecycle
@@ -17,10 +18,23 @@ class AddTaskViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        
+        configureNavigation()
+    }
+    
+    
+    // MARK: - Selectors
+    
+    @objc func saveButtonTapped() {
+        print("DEBUG: Save button tapped!")
     }
     
     
     // MARK: - Functions
 
+    private func configureNavigation() {
+        self.navigationItem.title = "Add Task"
+
+        let save = UIBarButtonItem(barButtonSystemItem: .save, target: self, action: #selector(saveButtonTapped))
+        self.navigationItem.rightBarButtonItem = save
+    }
 }

@@ -106,9 +106,9 @@
 			children = (
 				B6233D79280A919900EBF1FF /* Resources */,
 				B6233D78280A916700EBF1FF /* Applications */,
+				B6233D7A280A947D00EBF1FF /* Cell */,
 				B6233D77280A915E00EBF1FF /* View */,
 				B6233D74280A909300EBF1FF /* Controller */,
-				B6233D7A280A947D00EBF1FF /* Cell */,
 			);
 			path = ToDoList;
 			sourceTree = "<group>";
