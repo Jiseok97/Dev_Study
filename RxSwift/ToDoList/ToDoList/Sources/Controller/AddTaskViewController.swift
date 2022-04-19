@@ -6,10 +6,17 @@
 //
 
 import UIKit
+import RxSwift
 
 class AddTaskViewController: UIViewController {
 
     // MARK: - Properties
+    
+    private let taskSubject = PublishSubject<Task>()
+    
+    var taskSubjectObservable: Observable<Task> {
+        return taskSubject.asObservable()
+    }
 
     @IBOutlet weak var prioritySegmentControl: UISegmentedControl!
     @IBOutlet weak var taskTitleTextField: UITextField!
@@ -18,31 +25,22 @@ class AddTaskViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-
-        configureNavigation()
     }
     
     
     // MARK: - Selectors
     
-    @objc func saveButtonTapped() {
-        
+    
+    // MARK: - Functions
+
+    @IBAction func saveButtonTapped() {
         guard let priority = Priority(rawValue: self.prioritySegmentControl.selectedSegmentIndex),
               let title = self.taskTitleTextField.text else { return }
         
         let task = Task(title: title, priority: priority)
+        taskSubject.onNext(task)
         
-        
+        self.dismiss(animated: true, completion: nil)
     }
     
-    
-    // MARK: - Functions
-
-    private func configureNavigation() {
-        self.navigationItem.title = "Add Task"
-        self.navigationItem.largeTitleDisplayMode = .never
-
-        let save = UIBarButtonItem(barButtonSystemItem: .save, target: self, action: #selector(saveButtonTapped))
-        self.navigationItem.rightBarButtonItem = save
-    }
 }

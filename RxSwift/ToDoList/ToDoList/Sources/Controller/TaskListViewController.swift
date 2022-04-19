@@ -7,6 +7,7 @@
 
 import Foundation
 import UIKit
+import RxSwift
 
 class TaskListViewController: UIViewController {
     
@@ -15,6 +16,8 @@ class TaskListViewController: UIViewController {
     @IBOutlet weak var prioritySegmentedControl: UISegmentedControl!
     @IBOutlet weak var listTableView: UITableView!
     
+    let disposeBag = DisposeBag()
+    
     // MARK: - Lifecycle
     
     override func viewDidLoad() {
@@ -22,6 +25,19 @@ class TaskListViewController: UIViewController {
         
         configureUI()
         configureTableView()
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        
+        let controller = AddTaskViewController()
+        
+        controller.taskSubjectObservable
+            .subscribe(onNext: { task in
+                
+                print("DEBUG: task is \(task)")
+                
+            }).disposed(by: disposeBag)
     }
     
     // MARK: - Functions
@@ -35,13 +51,6 @@ class TaskListViewController: UIViewController {
         listTableView.dataSource = self
     }
     
-    @IBAction func AddButtonTapped() {
-        let controller = AddTaskViewController()
-//        controller.modalPresentationStyle = .overFullScreen
-//        present(controller, animated: true, completion: nil)
-        self.navigationController?.pushViewController(controller, animated: true)
-    }
-    
 }
 
 
@@ -49,6 +58,21 @@ class TaskListViewController: UIViewController {
 // MARK: - UITableView Delegate/DataSource
 
 extension TaskListViewController: UITableViewDelegate, UITableViewDataSource {
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        guard let navController = segue.destination as? UINavigationController,
+              let addController = navController.viewControllers.first as? AddTaskViewController else {
+                  fatalError("Controller not found..")
+              }
+        
+        addController.taskSubjectObservable
+            .subscribe(onNext: { task in
+
+                print("DEBUG: task is \(task)")
+
+            }).disposed(by: disposeBag)
+        
+    }
+    
     func numberOfSections(in tableView: UITableView) -> Int {
         return 1
     }
