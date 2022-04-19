@@ -10,6 +10,8 @@
     <objects>
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="AddTaskViewController" customModule="ToDoList" customModuleProvider="target">
             <connections>
+                <outlet property="prioritySegmentControl" destination="qDf-m0-gOo" id="fIe-Ax-F4z"/>
+                <outlet property="taskTitleTextField" destination="joc-cG-jZq" id="qBQ-T6-Pmp"/>
                 <outlet property="view" destination="i5M-Pr-FkT" id="sfx-zR-JGt"/>
             </connections>
         </placeholder>

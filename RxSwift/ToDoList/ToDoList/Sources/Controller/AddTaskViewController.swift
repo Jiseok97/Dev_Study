@@ -11,7 +11,8 @@ class AddTaskViewController: UIViewController {
 
     // MARK: - Properties
 
-    
+    @IBOutlet weak var prioritySegmentControl: UISegmentedControl!
+    @IBOutlet weak var taskTitleTextField: UITextField!
     
     // MARK: - Lifecycle
     
@@ -25,7 +26,13 @@ class AddTaskViewController: UIViewController {
     // MARK: - Selectors
     
     @objc func saveButtonTapped() {
-        print("DEBUG: Save button tapped!")
+        
+        guard let priority = Priority(rawValue: self.prioritySegmentControl.selectedSegmentIndex),
+              let title = self.taskTitleTextField.text else { return }
+        
+        let task = Task(title: title, priority: priority)
+        
+        
     }
     
     
@@ -33,6 +40,7 @@ class AddTaskViewController: UIViewController {
 
     private func configureNavigation() {
         self.navigationItem.title = "Add Task"
+        self.navigationItem.largeTitleDisplayMode = .never
 
         let save = UIBarButtonItem(barButtonSystemItem: .save, target: self, action: #selector(saveButtonTapped))
         self.navigationItem.rightBarButtonItem = save
