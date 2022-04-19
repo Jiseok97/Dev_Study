@@ -37,6 +37,8 @@ class TaskListViewController: UIViewController {
     
     @IBAction func AddButtonTapped() {
         let controller = AddTaskViewController()
+//        controller.modalPresentationStyle = .overFullScreen
+//        present(controller, animated: true, completion: nil)
         self.navigationController?.pushViewController(controller, animated: true)
     }
     

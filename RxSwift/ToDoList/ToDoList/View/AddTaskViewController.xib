@@ -17,8 +17,34 @@
         <view clearsContextBeforeDrawing="NO" contentMode="scaleToFill" id="i5M-Pr-FkT">
             <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+            <subviews>
+                <segmentedControl opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="top" segmentControlStyle="plain" selectedSegmentIndex="0" translatesAutoresizingMaskIntoConstraints="NO" id="qDf-m0-gOo">
+                    <rect key="frame" x="104" y="60" width="206" height="32"/>
+                    <segments>
+                        <segment title="High"/>
+                        <segment title="Medium"/>
+                        <segment title="Low"/>
+                    </segments>
+                </segmentedControl>
+                <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="joc-cG-jZq">
+                    <rect key="frame" x="107" y="430.5" width="200" height="35"/>
+                    <color key="backgroundColor" white="0.66666666666666663" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                    <constraints>
+                        <constraint firstAttribute="width" constant="200" id="MRR-8Q-dnt"/>
+                        <constraint firstAttribute="height" constant="35" id="WZS-bX-RiI"/>
+                    </constraints>
+                    <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                    <textInputTraits key="textInputTraits"/>
+                </textField>
+            </subviews>
             <viewLayoutGuide key="safeArea" id="fnl-2z-Ty3"/>
             <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+            <constraints>
+                <constraint firstItem="joc-cG-jZq" firstAttribute="centerY" secondItem="i5M-Pr-FkT" secondAttribute="centerY" id="NWI-zj-Edn"/>
+                <constraint firstItem="joc-cG-jZq" firstAttribute="centerX" secondItem="i5M-Pr-FkT" secondAttribute="centerX" id="jLw-6W-j9K"/>
+                <constraint firstItem="qDf-m0-gOo" firstAttribute="centerX" secondItem="i5M-Pr-FkT" secondAttribute="centerX" id="q5k-tN-aRG"/>
+                <constraint firstItem="qDf-m0-gOo" firstAttribute="top" secondItem="fnl-2z-Ty3" secondAttribute="top" constant="16" id="v3j-dM-4FX"/>
+            </constraints>
             <point key="canvasLocation" x="132" y="86"/>
         </view>
     </objects>
