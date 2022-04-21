@@ -27,10 +27,6 @@ class AddTaskViewController: UIViewController {
         super.viewDidLoad()
     }
     
-    
-    // MARK: - Selectors
-    
-    
     // MARK: - Functions
 
     @IBAction func saveButtonTapped() {
