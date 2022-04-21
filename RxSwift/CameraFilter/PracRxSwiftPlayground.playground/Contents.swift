@@ -3,6 +3,70 @@ import RxSwift
 import RxCocoa
 import PlaygroundSupport
 
+
+// MARK: - map
+
+let disposeBag = DisposeBag()
+
+//Observable.of(1,2,3,4,5)
+//    .map { return $0 * 2 }
+//    .subscribe(onNext: {
+//        print($0)
+//    }).disposed(by: disposeBag)
+
+// MARK: - flat map
+
+struct Student {
+    var score: BehaviorRelay<Int>
+}
+
+let john = Student(score: BehaviorRelay(value: 75))
+let mary = Student(score: BehaviorRelay(value: 95))
+
+let student = PublishSubject<Student>()
+
+//student.asObserver()
+//    .flatMap { $0.score.asObservable() }
+//    .subscribe(onNext: {
+//        print($0)
+//    }).disposed(by: disposeBag)
+
+//student.onNext(john)
+//john.score.accept(100)
+//
+//student.onNext(mary)
+//mary.score.accept(80)
+//
+//john.score.accept(59)
+
+// MARK: - flatMapLatest
+
+student.asObservable()
+    .flatMapLatest { $0.score.asObservable() }
+    .subscribe(onNext: {
+        print($0)
+    }).disposed(by: disposeBag)
+
+student.onNext(john)
+john.score.accept(100)
+
+student.onNext(mary)
+john.score.accept(73)
+mary.score.accept(52)
+
+
+// MARK: - To Array
+// 하나하나 원소씩이 아닌 한번에 배열로 다루고 싶을 때, → Collection/Table View
+
+//let disposeBag = DisposeBag()
+//
+//Observable.of(1,2,3,4,5)
+//    .toArray()
+//    .subscribe(onNext: {
+//        print($0)
+//    }).disposed(by: disposeBag)
+
+
 // MARK: - Ignore
 /// 끝날 때 구독 내용 호출됨, 그 전 요소 추가되도 무시
 //let strikes = PublishSubject<String>()
@@ -126,22 +190,22 @@ import PlaygroundSupport
 // MARK: - takeUntil
 // skipUntil과 반대 개념, takeUntil의 매개변수에 값이 전달되면 takeUntil을 선언한 변수가 저장했던 요소들만 반환
 
-let disposeBag = DisposeBag()
-
-let subject = PublishSubject<String>()
-let trigger = PublishSubject<String>()
-
-subject.takeUntil(trigger)
-    .subscribe(onNext: {
-        print("$0 = \($0)")
-    }).disposed(by: disposeBag)
-
-subject.onNext("A")
-subject.onNext("B")
-
-trigger.onNext("STOP")
-
-subject.onNext("C")
+//let disposeBag = DisposeBag()
+//
+//let subject = PublishSubject<String>()
+//let trigger = PublishSubject<String>()
+//
+//subject.takeUntil(trigger)
+//    .subscribe(onNext: {
+//        print("$0 = \($0)")
+//    }).disposed(by: disposeBag)
+//
+//subject.onNext("A")
+//subject.onNext("B")
+//
+//trigger.onNext("STOP")
+//
+//subject.onNext("C")
 
 
 
