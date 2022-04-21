@@ -18,10 +18,14 @@ class NewsTableViewController: UITableViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        configureUI()
     }
     
     
     // MARK: - Functions
     
+    private func configureUI() {
+        self.navigationController?.navigationBar.prefersLargeTitles = true
+    }
     
 }
