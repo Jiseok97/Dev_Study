@@ -51,7 +51,7 @@ student.onNext(john)
 john.score.accept(100)
 
 student.onNext(mary)
-john.score.accept(73)
+john.score.accept(73)       // X
 mary.score.accept(52)
 
 
