@@ -32,11 +32,11 @@ class NewsTableViewController: UITableViewController {
     
     private func populateNews() {
         
-        let url = URL(string: API_URL)!
+//        let url = URL(string: API_URL)!
+//
+//        let resource = Resource<ArticlesList>(url: url)
         
-        let resource = Resource<ArticlesList>(url: url)
-        
-        URLRequest.load(resource: resource)
+        URLRequest.load(resource: ArticlesList.all)
             .subscribe(onNext: { [weak self] result in
                 if let result = result {
                     self?.articles = result.articles
