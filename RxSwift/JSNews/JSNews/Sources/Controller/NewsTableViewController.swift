@@ -32,19 +32,22 @@ class NewsTableViewController: UITableViewController {
     
     private func populateNews() {
         
-//        let url = URL(string: API_URL)!
-//
-//        let resource = Resource<ArticlesList>(url: url)
-        
-        URLRequest.load(resource: ArticlesList.all)
-            .subscribe(onNext: { [weak self] result in
-                if let result = result {
-                    self?.articles = result.articles
-                    DispatchQueue.main.async {
-                        self?.tableView.reloadData()
-                    }
-                }
-            }).disposed(by: disposeBag)
+//        URLRequest.load(resource: ArticlesList.all)
+//            .subscribe(onNext: { [weak self] result in
+//                if let result = result {
+//                    self?.articles = result.articles
+//                    DispatchQueue.main.async {
+//                        self?.tableView.reloadData()
+//                    }
+//                }
+//            }).disposed(by: disposeBag)
+
+        NewsListService.shared.fetchNewsData(completion: { article in
+            self.articles = article
+            DispatchQueue.main.async {
+                self.tableView.reloadData()
+            }
+        })
         
     }
     
