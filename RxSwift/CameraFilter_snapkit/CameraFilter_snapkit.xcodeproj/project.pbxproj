@@ -13,6 +13,7 @@
 		B69FBF49282F7800002BA89D /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B69FBF48282F7800002BA89D /* ViewController.swift */; };
 		B69FBF4E282F7801002BA89D /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = B69FBF4D282F7801002BA89D /* Assets.xcassets */; };
 		B69FBF51282F7801002BA89D /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = B69FBF4F282F7801002BA89D /* LaunchScreen.storyboard */; };
+		B69FBF5C282F7F63002BA89D /* PhotosCollectionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B69FBF5B282F7F63002BA89D /* PhotosCollectionViewController.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -25,6 +26,7 @@
 		B69FBF4D282F7801002BA89D /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		B69FBF50282F7801002BA89D /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		B69FBF52282F7801002BA89D /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		B69FBF5B282F7F63002BA89D /* PhotosCollectionViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotosCollectionViewController.swift; sourceTree = "<group>"; };
 		D812233BA31C8ED5A6F4C6DE /* Pods-CameraFilter_snapkit.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-CameraFilter_snapkit.release.xcconfig"; path = "Target Support Files/Pods-CameraFilter_snapkit/Pods-CameraFilter_snapkit.release.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -72,7 +74,6 @@
 				B69FBF58282F7B58002BA89D /* Applications */,
 				B69FBF5A282F7B65002BA89D /* Resources */,
 				B69FBF59282F7B60002BA89D /* Sources */,
-				B69FBF48282F7800002BA89D /* ViewController.swift */,
 			);
 			path = CameraFilter_snapkit;
 			sourceTree = "<group>";
@@ -91,6 +92,8 @@
 		B69FBF59282F7B60002BA89D /* Sources */ = {
 			isa = PBXGroup;
 			children = (
+				B69FBF48282F7800002BA89D /* ViewController.swift */,
+				B69FBF5B282F7F63002BA89D /* PhotosCollectionViewController.swift */,
 			);
 			path = Sources;
 			sourceTree = "<group>";
@@ -229,6 +232,7 @@
 				B69FBF49282F7800002BA89D /* ViewController.swift in Sources */,
 				B69FBF45282F7800002BA89D /* AppDelegate.swift in Sources */,
 				B69FBF47282F7800002BA89D /* SceneDelegate.swift in Sources */,
+				B69FBF5C282F7F63002BA89D /* PhotosCollectionViewController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
