@@ -9,12 +9,19 @@ import Foundation
 import UIKit
 import SnapKit
 import Photos
+import RxSwift
+import RxCocoa
 
 private let reuseIdentifier = "PhotoCollectionViewCell"
 
 class PhotosCollectionViewController: UICollectionViewController {
     
     // MARK: - Properties
+    
+    private let selectedPhotoSubject = PublishSubject<UIImage>()
+    var selectedPhoto: Observable<UIImage> {
+        return selectedPhotoSubject.asObservable()
+    }
     
     private var images = [PHAsset]()
     
@@ -86,6 +93,25 @@ class PhotosCollectionViewController: UICollectionViewController {
         }
         
         return cell
+    }
+    
+    override func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        
+        let seletedAsset = self.images[indexPath.row]
+        PHImageManager.default().requestImage(for: seletedAsset, targetSize: CGSize(width: 300, height: 300), contentMode: .aspectFit, options: nil) { [weak self] image, info in
+            
+            guard let info = info else { return }
+            let isDegradedImage = info["PHImageResultIsDegradedKey"] as! Bool
+            
+            // 저품질 이미지가 아닐 경우
+            if !isDegradedImage {
+                if let image = image {
+                    self?.selectedPhotoSubject.onNext(image)
+                    self?.dismiss(animated: true, completion: nil)
+                }
+            }
+        }
+        
     }
     
 }
