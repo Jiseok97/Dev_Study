@@ -8,5 +8,7 @@ target 'CameraFilter_snapkit' do
   # Pods for CameraFilter_snapkit
 
   pod 'SnapKit'
+  pod 'RxSwift'
+  pod 'RxCocoa'
 
 end

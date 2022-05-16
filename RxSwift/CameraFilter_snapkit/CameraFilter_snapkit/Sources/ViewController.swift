@@ -21,7 +21,7 @@ class ViewController: UIViewController {
     
     private lazy var applyButton: UIButton = {
         let button = UIButton()
-        button.backgroundColor = .white
+        button.backgroundColor = .darkGray
         button.tintColor = .link
         button.setTitle("Apply", for: .normal)
         button.addTarget(self, action: #selector(handleApply), for: .touchUpInside)
@@ -38,7 +38,8 @@ class ViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        self.view.backgroundColor = .yellow
+        self.view.backgroundColor = .white
+        self.navigationController?.navigationBar.prefersLargeTitles = true
         
         configureUI()
         configureNavigationBar()
@@ -47,7 +48,7 @@ class ViewController: UIViewController {
     // MARK: - Selector
     
     @objc func handleAdd() {
-        let photosController = PhotosCollectionViewController()
+        let photosController = PhotosCollectionViewController(collectionViewLayout: UICollectionViewFlowLayout())
         navigationController?.pushViewController(photosController, animated: true)
     }
     
@@ -65,7 +66,7 @@ class ViewController: UIViewController {
             make.top.equalTo(self.view).offset(16)
             make.leading.equalTo(self.view).offset(24)
             make.trailing.equalTo(self.view).offset(-24)
-            make.height.equalToSuperview().multipliedBy(0.8)
+            make.height.equalToSuperview().multipliedBy(0.81)
         }
         
         self.view.addSubview(applyButton)
@@ -81,16 +82,14 @@ class ViewController: UIViewController {
         let appearance = UINavigationBarAppearance()
         appearance.configureWithOpaqueBackground()
 //        appearance.backgroundColor = .black
-//        appearance.titleTextAttributes = [.foregroundColor: UIColor.link]
+        appearance.titleTextAttributes = [.foregroundColor: UIColor.black]
         
-//        navigationItem.title = "Edit Profile"
+        navigationItem.title = "Camera Filter"
         navigationController?.navigationBar.standardAppearance = appearance
         navigationController?.navigationBar.scrollEdgeAppearance = navigationController?.navigationBar.standardAppearance
         navigationController?.navigationBar.isTranslucent = false
         navigationController?.navigationBar.tintColor = .link
-        
-
-        
+    
         navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .add, target: self, action: #selector(handleAdd))
     }
 
