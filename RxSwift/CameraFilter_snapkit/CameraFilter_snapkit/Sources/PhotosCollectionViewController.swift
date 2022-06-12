@@ -14,6 +14,10 @@ import RxCocoa
 
 private let reuseIdentifier = "PhotoCollectionViewCell"
 
+protocol PhotosDelegate : class {
+    func handleFetchImage()
+}
+
 class PhotosCollectionViewController: UICollectionViewController {
     
     // MARK: - Properties
@@ -22,6 +26,7 @@ class PhotosCollectionViewController: UICollectionViewController {
     var selectedPhoto: Observable<UIImage> {
         return selectedPhotoSubject.asObservable()
     }
+    weak var delegate: PhotosDelegate?
     
     private var images = [PHAsset]()
     
@@ -96,7 +101,7 @@ class PhotosCollectionViewController: UICollectionViewController {
     }
     
     override func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        
+        print("Tapped")
         let seletedAsset = self.images[indexPath.row]
         PHImageManager.default().requestImage(for: seletedAsset, targetSize: CGSize(width: 300, height: 300), contentMode: .aspectFit, options: nil) { [weak self] image, info in
             
@@ -106,8 +111,9 @@ class PhotosCollectionViewController: UICollectionViewController {
             // 저품질 이미지가 아닐 경우
             if !isDegradedImage {
                 if let image = image {
+                    self?.delegate?.handleFetchImage()
                     self?.selectedPhotoSubject.onNext(image)
-                    self?.dismiss(animated: true, completion: nil)
+                    self?.navigationController?.popViewController(animated: true)
                 }
             }
         }

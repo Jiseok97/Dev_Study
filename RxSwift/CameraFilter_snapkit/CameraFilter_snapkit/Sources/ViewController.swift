@@ -7,15 +7,17 @@
 
 import UIKit
 import SnapKit
+import RxSwift
 
 class ViewController: UIViewController {
 
     // MARK: - Properties
     
+    let disposeBag = DisposeBag()
+    
     private lazy var photoImageView: UIImageView = {
         let iv = UIImageView()
         iv.contentMode = .scaleAspectFit
-        iv.backgroundColor = .black
         return iv
     }()
     
@@ -95,3 +97,15 @@ class ViewController: UIViewController {
 
 }
 
+extension ViewController: PhotosDelegate {
+    func handleFetchImage() {
+        guard let controller = self.navigationController?.viewControllers.first as? PhotosCollectionViewController else { fatalError("PhotosCollectionViewController를 찾을 수 없습니다.")}
+//        let controller = PhotosCollectionViewController(collectionViewLayout: UICollectionViewFlowLayout())
+
+        controller.selectedPhoto.subscribe(onNext: { [weak self] photo in
+            self?.photoImageView.image = photo
+        }).disposed(by: disposeBag)
+        
+        
+    }
+}
